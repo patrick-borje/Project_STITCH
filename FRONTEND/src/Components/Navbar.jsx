@@ -1,4 +1,5 @@
-import {Container, Flex, Text, Link, HStack} from '@chakra-ui/react'
+import {Container, Flex, Text, HStack} from '@chakra-ui/react'
+import { Link } from 'react-router-dom';
 
 const NavBar = () => {
     return(
@@ -58,7 +59,7 @@ const NavBar = () => {
                         fontSize="20"
                     >
                         <Link 
-                            to={"/"}
+                            to={"/cart"}
                             style={{
                                 textDecoration: "none"
                             }}

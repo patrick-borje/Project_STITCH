@@ -1,6 +1,9 @@
-import { Box, Heading, Text } from "@chakra-ui/react"
+import { Box, Heading, HStack, IconButton, Text } from "@chakra-ui/react"
+import { FaCartPlus } from "react-icons/fa";
+import AddToCartButton from "./AddToCartButton";
 
-const ProductCard = ({product}) => {
+const ProductCard = ({product, userId}) => {
+    console.log(product, userId)
     return(
         <Box
             shadow='lg'
@@ -17,6 +20,9 @@ const ProductCard = ({product}) => {
                 <Text fontWeight='bold' fontSize='xl' mb={4}>
                     ${product.price}
                 </Text>
+                <HStack>
+                  <AddToCartButton product={product._id} userId={userId}/>
+                </HStack>
 
 
             </Box>
