@@ -32,7 +32,9 @@ export const authenticateUser = (req, res, next) => {
             if (err) {
                 return res.status(401).json({ success: false, message: 'Invalid token' });
             } else {
+                console.log("another test")
                 const user = await User.findById(data.id);
+                console.log("another test", user)
                 if (user) {
                     req.user = user;  // Attach user data to the request object
                     return next();  // Pass control to the next middleware/route handler
