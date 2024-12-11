@@ -34,7 +34,7 @@ export const createUser = async (req, res, next) => {
         const token = createSecretToken(newUser._id)
         res.cookie("token", token,{
             withCredentials: true,
-            httpOnly: false,
+            httpOnly: true,
         })
         res.status(201).json({success: true, data: newUser});
     }catch(error){
@@ -63,7 +63,7 @@ export const loginUser = async (req, res, next) => {
         console.log("create Token: " ,token)
         res.cookie("token", token,{
             withCredentials: true,
-            httpOnly: false,
+            httpOnly: true,
         });
         res.status(201).json({message: "User logged in successfully", success: true})
         next();
