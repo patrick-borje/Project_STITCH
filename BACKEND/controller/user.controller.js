@@ -60,6 +60,7 @@ export const loginUser = async (req, res, next) => {
             return res.json({message: "Incorrect email or password"})
         }
         const token = createSecretToken(user._id);
+        console.log("create Token: " token)
         res.cookie("token", token,{
             withCredentials: true,
             httpOnly: false,
