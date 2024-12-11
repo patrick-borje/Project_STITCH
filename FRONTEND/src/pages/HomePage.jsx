@@ -1,4 +1,4 @@
-import { Container, VStack, Text, SimpleGrid, useToast, Button} from "@chakra-ui/react"
+import { Container, VStack, Text, SimpleGrid, useToast, Button, HStack} from "@chakra-ui/react"
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {useCookies} from "react-cookie"
@@ -19,6 +19,9 @@ const HomePage = () => {
     const {fetchUsers, users} = useUserStore();
     const hasShownToast = useRef(false); // Ref to track toast state
 
+    const [currentPage, setCurrentPage] = useState(1); // Current page state
+    const productsPerPage = 6; // Set the number of products per page
+
     useEffect(() => {
  
         const verifyCookie = async () => {
@@ -31,7 +34,7 @@ const HomePage = () => {
             )
       
             const {status, user, id} = data;
-            console.log("This is the data: " , data)
+            // console.log("This is the data: " , data)
             setUserID(id);
             setUserName(user);
             if (status) {
@@ -66,6 +69,14 @@ const HomePage = () => {
     }
 
   
+    const paginateProducts = () => {
+        // Calculate the range of products for the current page
+        const indexOfLastProduct = currentPage * productsPerPage;
+        const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+        return products.slice(indexOfFirstProduct, indexOfLastProduct);
+      };
+    
+      const totalPages = Math.ceil(products.length / productsPerPage); // Total pages calculation
     
 
 
@@ -76,55 +87,59 @@ const HomePage = () => {
 
     return(
         <Container maxW="container.xl" py={12}>
-        
-          
-           
-
-        
-
-            <VStack spacing={8}>
-                <Text
-                    fontSize={"30"}
-                    fontWeight={"bold"}
-                    bgClip={"text"}
-                    textAlign={"center"}
-                    color={"black"}
-                >
-                    Current Products
-                </Text>
-
-                <SimpleGrid
-                    columns={{
-                        base:1,
-                        md: 2,
-                        lg: 3
-                    }}
-                    spacing={10}
-                    w={"full"}
-                >
-                    {products.map((product) => (
-                        <ProductCard key={product._id} product={product} userId={userID}/>
-                    ))}
-                </SimpleGrid>
-
-                <Text
-                    fontSize='xl'
-                    fontWeight={"bold"}
-                    textAlign={"center"}
-                    color={"black"}
-                >
-                    No Products Available at this Moment {""}
-                    <Link to={"/create"}>
-                        <Text
-                            as='span' color={'blue.500'} _hover={{textDecoration:"underline"}}
-                        >
-                            Create a product
-                        </Text>
-                    </Link>
-                </Text>
-
-            </VStack>
-        </Container>
+      <VStack spacing={8}>
+        <Text
+          fontSize={"30"}
+          fontWeight={"bold"}
+          bgClip={"text"}
+          textAlign={"center"}
+          color={"black"}
+        >
+          Current Products
+        </Text>
+        {products.length > 0 ? (
+          <>
+            <SimpleGrid
+              columns={{
+                base: 1,
+                md: 2,
+                lg: 3,
+              }}
+              spacing={10}
+              w={"full"}
+            >
+              {paginateProducts().map((product) => (
+                <ProductCard key={product._id} product={product} userId={userID} />
+              ))}
+            </SimpleGrid>
+            <HStack justify="center" spacing={4} mt={6}>
+              <Button
+                isDisabled={currentPage === 1}
+                onClick={() => setCurrentPage((prev) => prev - 1)}
+              >
+                Previous
+              </Button>
+              <Text>{`Page ${currentPage} of ${totalPages}`}</Text>
+              <Button
+                isDisabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((prev) => prev + 1)}
+              >
+                Next
+              </Button>
+            </HStack>
+          </>
+        ) : (
+          <Text fontSize="xl" fontWeight={"bold"} textAlign={"center"} color={"black"}>
+            No Products Available at this Moment{" "}
+            <Link to={"/create"}>
+              <Text as="span" color={"blue.500"} _hover={{ textDecoration: "underline" }}>
+                Create a product
+              </Text>
+            </Link>
+          </Text>
+        )}
+      </VStack>
+    </Container>
     )
 }
 
