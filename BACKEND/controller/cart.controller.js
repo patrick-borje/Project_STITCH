@@ -56,7 +56,8 @@ export const getCart = async (req, res) => {
     try {
  
         const {userId} = req.params
-     
+          console.log("test")
+        console.log("test", userId)
         const cart = await Cart.findOne({ userId: userId }).populate('products.productId');
   
         if (!cart) {
