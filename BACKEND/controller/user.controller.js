@@ -32,10 +32,12 @@ export const createUser = async (req, res, next) => {
     try{
         const newUser = await User.create(user);
         const token = createSecretToken(newUser._id)
-        res.cookie("token", token,{
-            withCredentials: true,
-            httpOnly: true,
-        })
+        res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',  // Use HTTPS in production
+    sameSite: 'None',  // Required for cross-origin requests
+    expires: new Date(Date.now() + 3600000),  // 1 hour expiration
+});
         res.status(201).json({success: true, data: newUser});
     }catch(error){
         console.error("Error in Creating a User: ", error.message);
@@ -61,10 +63,12 @@ export const loginUser = async (req, res, next) => {
         }
         const token = createSecretToken(user._id);
         console.log("create Token: " ,token)
-        res.cookie("token", token,{
-            withCredentials: true,
-            httpOnly: true,
-        });
+        res.cookie("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',  // Use HTTPS in production
+    sameSite: 'None',  // Required for cross-origin requests
+    expires: new Date(Date.now() + 3600000),  // 1 hour expiration
+});
         res.status(201).json({message: "User logged in successfully", success: true})
         next();
     }catch(error){
